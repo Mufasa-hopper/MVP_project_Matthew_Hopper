@@ -1,5 +1,5 @@
 const express = require('express');
-const { Pool } = require('ps');
+const { Pool } = require('pg');
 const dotenv = require('dotenv');
 dotenv.config();
 const app = express();
