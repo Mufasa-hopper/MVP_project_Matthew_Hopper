@@ -14,7 +14,7 @@ const pool = new Pool({
 
 app.use(express.static("public"));
 
-app.get("/goodDrinks", async (res , res) => {
+app.get("/goodDrinks", async (req , res) => {
     try {
         const result = await Pool.query("SELECT * FROM goodDrinks")
         res.json(result.rows).status(200)
