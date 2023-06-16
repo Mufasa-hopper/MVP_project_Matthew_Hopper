@@ -5,7 +5,7 @@ dotenv.config();
 const app = express();
 
 
-// const sql = postgres(process.env.DATABASE_URL);
+const dbString = process.env.DATABASE_URL;
 const PORT = process.env.PORT
 
 const pool = new Pool({
