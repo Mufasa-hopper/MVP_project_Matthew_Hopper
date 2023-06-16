@@ -1,12 +1,12 @@
 const express = require('express');
-const { Pool } = require('pg');
 const dotenv = require('dotenv');
-dotenv.config();
+const {Pool} = require('pg');
 const app = express();
 
+dotenv.config();
 
 const dbString = process.env.DATABASE_URL;
-const PORT = process.env.PORT
+const PORT = process.env.PORT;
 
 const pool = new Pool({
     connectionString: dbString
@@ -23,10 +23,6 @@ app.get("/goodDrinks", async (req , res) => {
     }
 })
 
-// TODO: Replace 3000 with process.env.PORT
-app.listen(process.env.PORT, () => {
-  console.log(`listening on Port ${3000}`);
-});
 
 app.listen (PORT, () => {
     console.log(`Listening on port: ${PORT}`);
