@@ -1,7 +1,7 @@
 -- Drop the table "goodDrinks" if it exists
 DROP TABLE IF EXISTS goodDrinks;
--- Drop the table "bars" if it exists
-DROP TABLE IF EXISTS bars;
+-- Drop the table "users" if it exists
+DROP TABLE IF EXISTS users;
 -- Drop the table "drinkMenu" if it exists
 DROP TABLE IF EXISTS drinkMenu;
 
@@ -14,18 +14,21 @@ CREATE TABLE goodDrinks (
     if_ice boolean
 );
 
--- Create the table "bars"
-CREATE TABLE bars (
+-- Create the table "users"
+CREATE TABLE users (
     id serial,
-    barName varchar,
-    yearEstablished int
+    username varchar,
+    email varchar,
+    password varchar(25)
 );
 
 -- Create the join table "drinkMenu"
-CREATE TABLE drinkMenu (
-    goodDrinkId int,
-    barId int,
-    FOREIGN KEY (goodDrinkId) REFERENCES goodDrinks(id),
-    FOREIGN KEY (barId) REFERENCES bars(id)
+CREATE TABLE userDrinkReviews (
+    reviewId serial,
+    userId int,
+    drinkId int,
+    rating int,
+    reviewText varchar(500),
+    FOREIGN KEY (userId) REFERENCES users(id),
+    FOREIGN KEY (drinkId) REFERENCES goodDrinks(id)
 );
-

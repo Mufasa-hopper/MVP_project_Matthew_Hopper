@@ -11,10 +11,17 @@ VALUES
     ('Whiskey Sour', 'Whiskey', 'lemon juice, simple syrup, and a cherry', true),
     ('Piña Colada', 'Rum', 'pineapple juice, coconut cream, and a pineapple wedge', true);
 
--- Seed the table "bars" with information using "INSERT INTO" and "VALUES"
-INSERT INTO bars (barName, yearEstablished)
-VALUES ('Hops Pub', 2000);
+-- Seed the table "users" with information using "INSERT INTO" and "VALUES"
+INSERT INTO users (username, email, password)
+VALUES 
+    ('JohnDoe', 'johndoe@example.com', 'password123'),
+    ('JaneSmith', 'janesmith@example.com', 'letmein'),
+    ('RobertJohnson', 'robertjohnson@example.com', 'securepass');
 
 -- Seed the table "drinkMenu" to establish the relationships
-INSERT INTO drinkMenu (goodDrinkId, barId)
-VALUES (1, 1), (2, 1), (3, 1), (4, 1);
+INSERT INTO userDrinkReviews (reviewId, userId, drinkId, rating, reviewText)
+VALUES 
+    (1, 1, 1, 4, 'Great drink! Loved the combination of tequila and orange juice.'),
+    (2, 1, 2, 3, 'Classic cocktail with a nice balance of flavors.'),
+    (3, 2, 3, 5, 'Refreshing and delicious. Perfect for summer.'),
+    (4, 3, 4, 2, 'Not a fan of olives in my drink, but the gin was good.');
