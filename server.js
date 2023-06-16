@@ -16,7 +16,7 @@ app.use(express.static("public"));
 
 app.get("/goodDrinks", async (req , res) => {
     try {
-        const result = await Pool.query("SELECT * FROM goodDrinks")
+        const result = await pool.query("SELECT * FROM goodDrinks")
         res.json(result.rows).status(200)
     } catch (err) {
         res.json(err.message).status(500)
