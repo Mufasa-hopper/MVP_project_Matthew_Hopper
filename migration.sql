@@ -1,13 +1,14 @@
+-- Drop the table "drinkMenu" if it exists
+-- I figured out that if you want to test the "DROP TABLE IF EXISTS" then you should drop the join table first. If you try to drop one of the tables that the JOIN tables depends on you will get an error.
+DROP TABLE IF EXISTS userDrinkReviews;
 -- Drop the table "goodDrinks" if it exists
 DROP TABLE IF EXISTS goodDrinks;
 -- Drop the table "users" if it exists
 DROP TABLE IF EXISTS users;
--- Drop the table "drinkMenu" if it exists
-DROP TABLE IF EXISTS drinkMenu;
 
 -- Create the table "goodDrinks"
 CREATE TABLE goodDrinks (
-    id serial,
+    id serial PRIMARY KEY,
     drinkName varchar,
     liquorBase varchar,
     addOns varchar,
@@ -16,7 +17,7 @@ CREATE TABLE goodDrinks (
 
 -- Create the table "users"
 CREATE TABLE users (
-    id serial,
+    id serial PRIMARY KEY,
     username varchar,
     email varchar,
     password varchar(25)
