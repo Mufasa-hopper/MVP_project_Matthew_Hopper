@@ -132,3 +132,7 @@ app.delete('/reviews/:reviewId', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+app.listen(PORT, () => {
+  console.log(`We're listening on port ${PORT}`)
+})
