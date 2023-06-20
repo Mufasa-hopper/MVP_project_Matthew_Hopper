@@ -43,7 +43,7 @@ app.post('/drinks/:drinkId/reviews', async (req, res) => {
     // Insert the review into the database
     const newReview = await pool.query(
       'INSERT INTO userDrinkReviews (userId, drinkId, rating, reviewText) VALUES ($1, $2, $3, $4) RETURNING reviewId',
-      [null, drinkId, rating, reviewText]
+      [/* Provide a valid userId here */, drinkId, rating, reviewText]
     );
 
     res.status(200).json({ message: 'Review added successfully', reviewId: newReview.rows[0].reviewId });
@@ -132,3 +132,4 @@ app.delete('/reviews/:reviewId', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+hiuig
