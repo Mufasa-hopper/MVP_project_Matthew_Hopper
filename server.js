@@ -15,13 +15,13 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // Retrieve a list of available drinks
-app.get('/drinks', async (req, res) => {
+app.get('/goodDrinks', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM goodDrinks');
     res.json(result.rows).status(200);
   } catch (err) {
     console.error('Error executing query:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ err: 'Internal Server Error' });
   }
 });
 
