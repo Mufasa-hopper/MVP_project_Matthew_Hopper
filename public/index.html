@@ -6,9 +6,20 @@
     <title>Document</title>
 </head>
 <body>
-    <n1>this is a project that i am struggling on</n1>
-    <p>hello hello</p>
+    <h1>Sip Sense</h1>
+    <p>Hello, hello!</p>
 
-    <script src='./main.js'></script>
+    <form id="review-form">
+        <label for="drink-id-input">Drink ID:</label>
+        <input type="text" id="drink-id-input" required>
+
+        <label for="rating-input">Rating:</label>
+        <input type="number" id="rating-input" min="1" max="5" required>
+
+        <label for="review-text-input">Review:</label>
+        <textarea id="review-text-input" required></textarea>
+
+        <button type="submit">Submit Review</button>
+    </form>
 </body>
 </html>

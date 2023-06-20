@@ -14,59 +14,6 @@ const pool = new Pool({
 app.use(express.json());
 app.use(express.static('public'));
 
-app.post('/register', async (req, res) => {
-  const { username, email, password } = req.body;
-
-  // Validate input data (e.g., check if required fields are present)
-
-  try {
-    // Check if the username or email already exists in the database
-    const existingUser = await pool.query(
-      'SELECT * FROM users WHERE username = $1 OR email = $2',
-      [username, email]
-    );
-
-    if (existingUser.rows.length > 0) {
-      return res.status(400).json({ error: 'Username or email already exists' });
-    }
-
-    // Insert the new user into the database
-    const newUser = await pool.query(
-      'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id',
-      [username, email, password]
-    );
-
-    res.status(200).json({ message: 'User registered successfully', userId: newUser.rows[0].id });
-  } catch (err) {
-    console.error('Error executing query:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// Authenticate and log in a user
-app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-
-  // Validate input data (e.g., check if required fields are present)
-
-  try {
-    // Check if the username and password match a user in the database
-    const user = await pool.query('SELECT * FROM users WHERE username = $1 AND password = $2', [username, password]);
-
-    if (user.rows.length === 0) {
-      return res.status(401).json({ error: 'Invalid username or password' });
-    }
-
-    // Generate a session token or use cookies for session management
-    const token = generateSessionToken();
-
-    res.status(200).json({ message: 'User logged in successfully', token });
-  } catch (err) {
-    console.error('Error executing query:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
 // Retrieve a list of available drinks
 app.get('/drinks', async (req, res) => {
   try {
@@ -96,7 +43,7 @@ app.post('/drinks/:drinkId/reviews', async (req, res) => {
     // Insert the review into the database
     const newReview = await pool.query(
       'INSERT INTO userDrinkReviews (userId, drinkId, rating, reviewText) VALUES ($1, $2, $3, $4) RETURNING reviewId',
-      [loggedInUserId, drinkId, rating, reviewText]
+      [null, drinkId, rating, reviewText]
     );
 
     res.status(200).json({ message: 'Review added successfully', reviewId: newReview.rows[0].reviewId });

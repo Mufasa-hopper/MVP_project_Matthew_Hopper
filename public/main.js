@@ -1,63 +1,10 @@
-// Register a new user
-async function registerUser(username, email, password) {
-    try {
-      const response = await fetch('/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, email, password }),
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error);
-      }
-  
-      const userData = await response.json();
-      const userId = userData.userId;
-      // You can store the user ID in the client-side storage or use it for subsequent requests
-      return userId;
-    } catch (error) {
-      console.error('Error registering user:', error);
-      // Handle error
-    }
-  }
-  
-  // Log in a user
-  async function loginUser(username, password) {
-    try {
-      const response = await fetch('/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error);
-      }
-  
-      const userData = await response.json();
-      const token = userData.token;
-      // You can store the session token in the client-side storage or use it for subsequent requests
-      return token;
-    } catch (error) {
-      console.error('Error logging in user:', error);
-      // Handle error
-    }
-  }
-  
-  // Add a review for a specific drink
-  async function addReview(drinkId, rating, reviewText, token) {
+// Add a review for a specific drink
+async function addReview(drinkId, rating, reviewText) {
     try {
       const response = await fetch(`/drinks/${drinkId}/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Include the session token in the request headers
         },
         body: JSON.stringify({ rating, reviewText }),
       });
@@ -78,13 +25,12 @@ async function registerUser(username, email, password) {
   }
   
   // Update a review
-  async function updateReview(reviewId, rating, reviewText, token) {
+  async function updateReview(reviewId, rating, reviewText) {
     try {
       const response = await fetch(`/reviews/${reviewId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Include the session token in the request headers
         },
         body: JSON.stringify({ rating, reviewText }),
       });
@@ -103,56 +49,81 @@ async function registerUser(username, email, password) {
   }
   
   // Delete a review
-  async function deleteReview(reviewId, token) {
+  async function deleteReview(reviewId) {
     try {
       const response = await fetch(`/reviews/${reviewId}`, {
         method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`, // Include the session token in the request headers
-        },
       });
   
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error);
       }
-     // Handle successful review deletion
-     console.log('Review deleted successfully.');
+      // Handle successful review deletion
+      console.log('Review deleted successfully.');
     } catch (error) {
       console.error('Error deleting review:', error);
       // Handle error
     }
   }
   
+  // Get references to the review form
+  const reviewForm = document.getElementById('review-form');
+  
+  // Add event listener for review form submission
+  reviewForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+  
+    // Get user input values from the review form
+    const drinkIdInput = document.getElementById('drink-id-input');
+    const ratingInput = document.getElementById('rating-input');
+    const reviewTextInput = document.getElementById('review-text-input');
+  
+    const drinkId = drinkIdInput.value;
+    const rating = ratingInput.value;
+    const reviewText = reviewTextInput.value;
+  
+    try {
+      // Add a review for a drink
+      await addReview(drinkId, rating, reviewText);
+      console.log('Review added successfully.');
+  
+      // Clear the review form
+      drinkIdInput.value = '';
+      ratingInput.value = '';
+      reviewTextInput.value = '';
+  
+      // Display success message to the user
+      const successMessage = document.getElementById('success-message');
+      successMessage.textContent = 'Review submitted successfully!';
+      successMessage.style.display = 'block';
+    } catch (error) {
+      console.error('Error adding review:', error);
+      // Display error message to the user
+      const errorMessage = document.getElementById('error-message');
+      errorMessage.textContent = 'Review submission failed. Please try again.';
+      errorMessage.style.display = 'block';
+    }
+  });
+  
   // Example usage
   async function exampleUsage() {
     try {
-      // Register a new user
-      const username = 'johnDoe';
-      const email = 'johndoe@example.com';
-      const password = 'password123';
-      const userId = await registerUser(username, email, password);
-      console.log('User registered successfully. User ID:', userId);
-  
-      // Log in the user
-      const token = await loginUser(username, password);
-      console.log('User logged in successfully. Token:', token);
-  
       // Add a review for a drink
       const drinkId = '12345'; // Specify the ID of the drink
       const rating = 4;
-      const reviewText = 'Great drink!';
-      await addReview(drinkId, rating, reviewText, token);
-  
+      const reviewText = 'Great drink';
+      await addReview(drinkId, rating, reviewText);
+
       // Update a review
       const reviewId = '67890'; // Specify the ID of the review
       const updatedRating = 5;
       const updatedReviewText = 'Excellent drink!';
-      await updateReview(reviewId, updatedRating, updatedReviewText, token);
+      await updateReview(reviewId, updatedRating, updatedReviewText);
   
       // Delete a review
       const reviewIdToDelete = '12345'; // Specify the ID of the review to delete
-      await deleteReview(reviewIdToDelete, token);
+      await deleteReview(reviewIdToDelete);
     } catch (error) {
       console.error('Example usage error:', error);
     }
