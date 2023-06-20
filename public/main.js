@@ -1,4 +1,3 @@
-// Add a review for a specific drink
 async function addReview(drinkId, rating, reviewText) {
   try {
     const response = await fetch('/reviews', {
@@ -72,44 +71,46 @@ async function addReview(drinkId, rating, reviewText) {
     }
   }
   
-  // Get references to the review form
+  
   const reviewForm = document.getElementById('review-form');
-  
-  // Add event listener for review form submission
-  reviewForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-  
-    // Get user input values from the review form
-    const drinkIdInput = document.getElementById('drink-id-input');
-    const ratingInput = document.getElementById('rating-input');
-    const reviewTextInput = document.getElementById('review-text-input');
-  
-    const drinkId = drinkIdInput.value;
-    const rating = ratingInput.value;
-    const reviewText = reviewTextInput.value;
-  
-    try {
-      // Add a review for a drink
-      await addReview(drinkId, rating, reviewText);
-      console.log('Review added successfully.');
-  
-      // Clear the review form
-      drinkIdInput.value = '';
-      ratingInput.value = '';
-      reviewTextInput.value = '';
-  
-      // Display success message to the user
-      const successMessage = document.getElementById('success-message');
-      successMessage.textContent = 'Review submitted successfully!';
-      successMessage.style.display = 'block';
-    } catch (error) {
-      console.error('Error adding review:', error);
-      // Display error message to the user
-      const errorMessage = document.getElementById('error-message');
-      errorMessage.textContent = 'Review submission failed. Please try again.';
-      errorMessage.style.display = 'block';
-    }
+reviewForm.addEventListener('submit', (event) => {
+  event.preventDefault(); // Prevent the form from submitting and page refreshing
+
+  const drinkIdInput = document.getElementById('drink-id-input');
+  const ratingInput = document.getElementById('rating-input');
+  const reviewTextInput = document.getElementById('review-text-input');
+
+  const drinkId = drinkIdInput.value;
+  const rating = ratingInput.value;
+  const reviewText = reviewTextInput.value;
+
+  addReview(drinkId, rating, reviewText); // Call the addReview function with the input values
+  reviewForm.reset(); // Reset the form inputs
+});
+
+// Add event listeners for the "Update Review" buttons
+const updateButtons = document.getElementsByClassName('update-review-button');
+for (const button of updateButtons) {
+  button.addEventListener('click', (event) => {
+    const reviewId = event.target.dataset.reviewId;
+
+    // Get the updated rating and review text from the user
+    const updatedRating = prompt('Enter the updated rating:');
+    const updatedReviewText = prompt('Enter the updated review text:');
+
+    updateReview(reviewId, updatedRating, updatedReviewText); // Call the updateReview function with the updated values
   });
+}
+
+// Add event listeners for the "Delete Review" buttons
+const deleteButtons = document.getElementsByClassName('delete-review-button');
+for (const button of deleteButtons) {
+  button.addEventListener('click', (event) => {
+    const reviewId = event.target.dataset.reviewId;
+
+    deleteReview(reviewId); // Call the deleteReview function
+  });
+}
   
   // Example usage
   async function exampleUsage() {
