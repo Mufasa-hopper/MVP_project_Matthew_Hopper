@@ -1,11 +1,11 @@
 async function addReview(drinkId, rating, reviewText) {
   try {
-    const response = await fetch('/reviews', {
+    const response = await fetch(`/drinks/${drinkId}/reviews`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ drinkId, rating, reviewText }),
+      body: JSON.stringify({ rating, reviewText }),
     });
 
     if (!response.ok) {
@@ -13,7 +13,8 @@ async function addReview(drinkId, rating, reviewText) {
       throw new Error(errorData.error);
     }
 
-    const reviewData = await response.json();
+    const reviewData = await response.json(); // Remove this line
+
     const reviewId = reviewData.reviewId;
     const reviewListItem = document.createElement('li');
     reviewListItem.textContent = `Review ID: ${reviewId}, Rating: ${rating}, Text: ${reviewText}`;
@@ -22,16 +23,15 @@ async function addReview(drinkId, rating, reviewText) {
     reviewList.appendChild(reviewListItem);
 
     console.log('Review added successfully. Review ID:', reviewId);
-  } catch (error) {
-    console.error('Error adding review:', error);
-    // Handle error
+  } catch (err) {
+    console.error('Error adding review:', err);
   }
 }
   
   // Update a review
   async function updateReview(reviewId, rating, reviewText) {
     try {
-      const response = await fetch(`/reviews/${reviewId}`, {
+      const response = await fetch(`/reviews/:${reviewId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ async function addReview(drinkId, rating, reviewText) {
   // Delete a review
   async function deleteReview(reviewId) {
     try {
-      const response = await fetch(`/reviews/${reviewId}`, {
+      const response = await fetch(`/reviews/:${reviewId}`, {
         method: 'DELETE',
       });
   
