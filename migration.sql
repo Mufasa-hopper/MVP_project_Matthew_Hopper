@@ -19,11 +19,10 @@ CREATE TABLE goodDrinks (
 CREATE TABLE users (
     id serial PRIMARY KEY,
     username varchar,
-    email varchar,
     password varchar(25)
 );
 
--- Create the join table "drinkMenu"
+-- Create the join table "userDrinkReviews"
 CREATE TABLE userDrinkReviews (
     reviewId serial,
     userId int,

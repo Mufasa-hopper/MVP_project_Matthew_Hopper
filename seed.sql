@@ -14,14 +14,14 @@ VALUES
 -- Seed the table "users" with information using "INSERT INTO" and "VALUES"
 INSERT INTO users (username, email, password)
 VALUES 
-    ('JohnDoe', 'johndoe@example.com', 'password123'),
-    ('JaneSmith', 'janesmith@example.com', 'letmein'),
-    ('RobertJohnson', 'robertjohnson@example.com', 'securepass');
+    ('JohnDoe', 'password123'),
+    ('JaneSmith',  'letmein'),
+    ('RobertJohnson', 'securepass');
 
 -- Seed the table "drinkMenu" to establish the relationships
 INSERT INTO userDrinkReviews (reviewId, userId, drinkId, rating, reviewText)
-VALUES 
-    (1, 1, 1, 4, 'Great drink! Loved the combination of tequila and orange juice.'),
-    (2, 1, 2, 3, 'Classic cocktail with a nice balance of flavors.'),
-    (3, 2, 3, 5, 'Refreshing and delicious. Perfect for summer.'),
-    (4, 3, 4, 2, 'Not a fan of olives in my drink, but the gin was good.');
+VALUES
+  (1, 1, 1, 4, 'Great drink! Loved the combination of tequila and orange juice.'),
+  (2, 1, 2, 3, 'Classic cocktail with a nice balance of flavors.'),
+  (3, 2, 3, 5, 'Refreshing and delicious. Perfect for summer.'),
+  (4, 3, 4, 2, 'Not a fan of olives in my drink, but the gin was good.');
