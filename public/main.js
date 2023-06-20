@@ -1,28 +1,33 @@
 // Add a review for a specific drink
 async function addReview(drinkId, rating, reviewText) {
-    try {
-      const response = await fetch(`/drinks/${drinkId}/reviews`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ rating, reviewText }),
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error);
-      }
-  
-      const reviewData = await response.json();
-      const reviewId = reviewData.reviewId;
-      // Handle successful review addition
-      console.log('Review added successfully. Review ID:', reviewId);
-    } catch (error) {
-      console.error('Error adding review:', error);
-      // Handle error
+  try {
+    const response = await fetch('/reviews', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ drinkId, rating, reviewText }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
     }
+
+    const reviewData = await response.json();
+    const reviewId = reviewData.reviewId;
+    const reviewListItem = document.createElement('li');
+    reviewListItem.textContent = `Review ID: ${reviewId}, Rating: ${rating}, Text: ${reviewText}`;
+
+    const reviewList = document.getElementById('review-list');
+    reviewList.appendChild(reviewListItem);
+
+    console.log('Review added successfully. Review ID:', reviewId);
+  } catch (error) {
+    console.error('Error adding review:', error);
+    // Handle error
   }
+}
   
   // Update a review
   async function updateReview(reviewId, rating, reviewText) {
