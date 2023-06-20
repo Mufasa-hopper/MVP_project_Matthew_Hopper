@@ -1,3 +1,8 @@
+
+const reviewList = document.getElementById('reviews');
+const reviewHTML = `<li>Review ID: ${reviewId}, Rating: ${rating}, Text: ${reviewText}</li>`;
+reviewList.innerHTML += reviewHTML;
+
 async function addReview(drinkId, rating, reviewText) {
   try {
     const response = await fetch(`/drinks/${drinkId}/reviews`, {
@@ -8,18 +13,15 @@ async function addReview(drinkId, rating, reviewText) {
       body: JSON.stringify({ rating, reviewText }),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error);
-    }
-
     const reviewData = await response.json();
+    if (!response.ok) {
+      throw new Error(reviewData.error);
+    }
     const reviewId = reviewData.reviewId;
-    const reviewListItem = document.createElement('li');
-    reviewListItem.textContent = `Review ID: ${reviewId}, Rating: ${rating}, Text: ${reviewText}`;
 
-    const reviewList = document.getElementById('review-list');
-    reviewList.appendChild(reviewListItem);
+    const reviewList = document.getElementById('reviews');
+    const reviewHTML = `<li>Review ID: ${reviewId}, Rating: ${rating}, Text: ${reviewText}</li>`;
+    reviewList.innerHTML += reviewHTML;
 
     console.log('Review added successfully. Review ID:', reviewId);
     reviewForm.reset(); // Reset the form inputs
@@ -71,7 +73,44 @@ async function addReview(drinkId, rating, reviewText) {
     }
   }
   
-  
+  const registrationForm = document.getElementById('registration-form');
+
+registrationForm.addEventListener('submit', async (event) => {
+  event.preventDefault(); // Prevent form submission
+
+  const usernameInput = document.getElementById('username-input');
+  const passwordInput = document.getElementById('password-input');
+
+  const username = usernameInput.value;
+  const password = passwordInput.value;
+
+  try {
+    // Make an API request to register the user
+    const response = await fetch('/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+
+    // Registration successful
+    console.log('Registration successful!');
+    // You can perform any additional actions here, such as showing a success message or redirecting the user to a different page
+  } catch (err) {
+    console.error('Error during registration:', err);
+    // You can display an error message or perform any other error handling here
+  }
+
+  // Reset the form inputs
+  registrationForm.reset();
+});
+
   const reviewForm = document.getElementById('review-form');
 reviewForm.addEventListener('submit', (event) => {
   event.preventDefault(); // Prevent the form from submitting and page refreshing
