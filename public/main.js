@@ -1,8 +1,3 @@
-
-const reviewList = document.getElementById('reviews');
-const reviewHTML = `<li>Review ID: ${reviewId}, Rating: ${rating}, Text: ${reviewText}</li>`;
-reviewList.innerHTML += reviewHTML;
-
 async function addReview(drinkId, rating, reviewText) {
   try {
     const response = await fetch(`/drinks/${drinkId}/reviews`, {
