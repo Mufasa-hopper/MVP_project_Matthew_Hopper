@@ -1,8 +1,9 @@
+-- Drop the table "userDrinkReviews" if it exists
+DROP TABLE IF EXISTS userDrinkReviews;
 -- Drop the table "goodDrinks" if it exists
 DROP TABLE IF EXISTS goodDrinks;
 
--- Drop the table "userDrinkReviews" if it exists
-DROP TABLE IF EXISTS userDrinkReviews;
+
 
 -- Create the table "goodDrinks"
 CREATE TABLE goodDrinks (

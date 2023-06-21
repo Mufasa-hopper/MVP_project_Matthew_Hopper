@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // Retrieve a list of available drinks
-app.get('/drinks', async (req, res) => {
+app.get('/goodDrinks', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM goodDrinks');
     res.json(result.rows);
@@ -27,7 +27,7 @@ app.get('/drinks', async (req, res) => {
 });
 
 // Create a new drink review
-app.post('/drinks/:drinkId/reviews', async (req, res) => {
+app.post('./drinks/:drinkId/reviews', async (req, res) => {
   const { drinkId, rating, reviewText } = req.body;
 
   try {
@@ -35,7 +35,7 @@ app.post('/drinks/:drinkId/reviews', async (req, res) => {
     const drink = await pool.query('SELECT * FROM goodDrinks WHERE id = $1', [drinkId]);
 
     if (drink.rows.length === 0) {
-      return res.status(404).json({ error: 'Drink not found' });
+      return res.status(404).send('Drink not found');
     }
 
     // Insert the review into the database
@@ -44,10 +44,10 @@ app.post('/drinks/:drinkId/reviews', async (req, res) => {
       [drinkId, rating, reviewText]
     );
 
-    res.status(201).json({ message: 'Review added successfully', reviewId: newReview.rows[0].reviewId });
+    res.status(201).send('Review added successfully');
   } catch (err) {
     console.error('Error executing query:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).send('Internal Server Error');
   }
 });
 
@@ -59,12 +59,12 @@ app.get('/reviews/:reviewId', async (req, res) => {
     const result = await pool.query('SELECT * FROM userDrinkReviews WHERE reviewId = $1', [reviewId]);
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Review not found' });
-    }
-
+      return res.status(404).send('Review not Found');
+    } else {
     res.json(result.rows[0]);
+    }
   } catch (err) {
-    console.error('Error executing query:', err);
+    console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -80,16 +80,17 @@ app.put('/reviews/:reviewId', async (req, res) => {
 
     if (existingReview.rows.length === 0) {
       return res.status(404).json({ error: 'Review not found' });
-    }
+    } else {
 
     // Update the review in the database
     await pool.query(
       'UPDATE userDrinkReviews SET rating = $1, reviewText = $2 WHERE reviewId = $3',
       [rating, reviewText, reviewId])
       res.status(200).json({ message: 'Review updated successfully' });
+    }
     } catch (err) {
-      console.error('Error executing query:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
+      console.error(err);
+      res.status(500).send('Internal Server Error');
     }
   });
   

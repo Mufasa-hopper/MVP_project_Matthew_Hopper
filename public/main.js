@@ -3,7 +3,7 @@ const reviewForm = document.getElementById('review-form');
 // Add a review
 async function addReview(drinkId, rating, reviewText) {
   try {
-    const response = await fetch(`/drinks/${drinkId}/reviews`, {
+    const response = await fetch(`./drinks/${drinkId}/reviews`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
