@@ -1,113 +1,12 @@
-async function addReview(drinkId, rating, reviewText) {
-  try {
-    const response = await fetch(`/drinks/${drinkId}/reviews`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ rating, reviewText }),
-    });
-
-    const reviewData = await response.json();
-    if (!response.ok) {
-      throw new Error(reviewData.error);
-    }
-    const reviewId = reviewData.reviewId;
-
-    const reviewList = document.getElementById('reviews');
-    const reviewHTML = `<li>Review ID: ${reviewId}, Rating: ${rating}, Text: ${reviewText}</li>`;
-    reviewList.innerHTML += reviewHTML;
-
-    console.log('Review added successfully. Review ID:', reviewId);
-    reviewForm.reset(); // Reset the form inputs
-  } catch (err) {
-    console.error('Error adding review:', err);
-  }
+// Add a review to the webpage
+function addReviewToPage(reviewId, rating, reviewText) {
+  const reviewList = document.getElementById('reviews');
+  const reviewHTML = `<li>Review ID: ${reviewId}, Rating: ${rating}, Text: ${reviewText}</li>`;
+  reviewList.innerHTML += reviewHTML;
 }
-  
-  // Update a review
-  async function updateReview(reviewId, rating, reviewText) {
-    try {
-      const response = await fetch(`/reviews/${reviewId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ rating, reviewText }),
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error);
-      }
-  
-      // Handle successful review update
-      console.log('Review updated successfully.');
-    } catch (error) {
-      console.error('Error updating review:', error);
-      // Handle error
-    }
-  }
-  
-  // Delete a review
-  async function deleteReview(reviewId) {
-    try {
-      const response = await fetch(`/reviews/${reviewId}`, {
-        method: 'DELETE',
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error);
-      }
-      // Handle successful review deletion
-      console.log('Review deleted successfully.');
-    } catch (error) {
-      console.error('Error deleting review:', error);
-      // Handle error
-    }
-  }
-  
-  const registrationForm = document.getElementById('registration-form');
 
-registrationForm.addEventListener('submit', async (event) => {
-  event.preventDefault(); // Prevent form submission
-
-  const usernameInput = document.getElementById('username-input');
-  const passwordInput = document.getElementById('password-input');
-
-  const username = usernameInput.value;
-  const password = passwordInput.value;
-
-  try {
-    // Make an API request to register the user
-    const response = await fetch('/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error);
-    }
-
-    // Registration successful
-    console.log('Registration successful!');
-    // You can perform any additional actions here, such as showing a success message or redirecting the user to a different page
-  } catch (err) {
-    console.error('Error during registration:', err);
-    // You can display an error message or perform any other error handling here
-  }
-
-  // Reset the form inputs
-  registrationForm.reset();
-});
-
-  const reviewForm = document.getElementById('review-form');
-reviewForm.addEventListener('submit', (event) => {
+// Handle the form submission for adding a review
+async function handleReviewFormSubmission(event) {
   event.preventDefault(); // Prevent the form from submitting and page refreshing
 
   const drinkIdInput = document.getElementById('drink-id-input');
@@ -118,56 +17,84 @@ reviewForm.addEventListener('submit', (event) => {
   const rating = ratingInput.value;
   const reviewText = reviewTextInput.value;
 
-  addReview(drinkId, rating, reviewText); // Call the addReview function with the input values
-  
-});
+  try {
+    // Add the review to the database
+    await addReview(drinkId, rating, reviewText);
+    console.log('Review added successfully.');
+
+    // Add the review to the webpage
+    addReviewToPage(drinkId, rating, reviewText);
+
+    // Reset the form inputs
+    reviewForm.reset();
+  } catch (error) {
+    console.error('Error adding review:', error);
+  }
+}
+
+// Update a review
+async function handleUpdateReview(event) {
+  const reviewId = event.target.dataset.reviewId;
+
+  // Get the updated rating and review text from the user
+  const updatedRating = prompt('Enter the updated rating:');
+  const updatedReviewText = prompt('Enter the updated review text:');
+
+  try {
+    // Update the review in the database
+    await updateReview(reviewId, updatedRating, updatedReviewText);
+    console.log('Review updated successfully.');
+
+    // Update the review on the webpage
+    const reviewElement = document.querySelector(`li[data-review-id="${reviewId}"]`);
+    if (reviewElement) {
+      reviewElement.innerHTML = `Review ID: ${reviewId}, Rating: ${updatedRating}, Text: ${updatedReviewText}`;
+    }
+  } catch (error) {
+    console.error('Error updating review:', error);
+  }
+}
+
+// Delete a review
+async function handleDeleteReview(event) {
+  const reviewId = event.target.dataset.reviewId;
+
+  try {
+    // Delete the review from the database
+    await deleteReview(reviewId);
+    console.log('Review deleted successfully.');
+
+    // Remove the review from the webpage
+    const reviewElement = document.querySelector(`li[data-review-id="${reviewId}"]`);
+    if (reviewElement) {
+      reviewElement.remove();
+    }
+  } catch (error) {
+    console.error('Error deleting review:', error);
+  }
+}
+
+// Add event listener for the review form submission
+reviewForm.addEventListener('submit', handleReviewFormSubmission);
 
 // Add event listeners for the "Update Review" buttons
 const updateButtons = document.getElementsByClassName('update-review-button');
 for (const button of updateButtons) {
-  button.addEventListener('click', (event) => {
-    const reviewId = event.target.dataset.reviewId;
-
-    // Get the updated rating and review text from the user
-    const updatedRating = prompt('Enter the updated rating:');
-    const updatedReviewText = prompt('Enter the updated review text:');
-
-    updateReview(reviewId, updatedRating, updatedReviewText); // Call the updateReview function with the updated values
-  });
+  button.addEventListener('click', handleUpdateReview);
 }
 
 // Add event listeners for the "Delete Review" buttons
 const deleteButtons = document.getElementsByClassName('delete-review-button');
 for (const button of deleteButtons) {
-  button.addEventListener('click', (event) => {
-    const reviewId = event.target.dataset.reviewId;
-
-    deleteReview(reviewId); // Call the deleteReview function
-  });
+  button.addEventListener('click', handleDeleteReview);
 }
-  
-  // Example usage
-  async function exampleUsage() {
-    try {
-      // Add a review for a drink
-      const drinkId = '12345'; // Specify the ID of the drink
-      const rating = 4;
-      const reviewText = 'Great drink';
-      await addReview(drinkId, rating, reviewText);
 
-      // Update a review
-      const reviewId = '67890'; // Specify the ID of the review
-      const updatedRating = 5;
-      const updatedReviewText = 'Excellent drink!';
-      await updateReview(reviewId, updatedRating, updatedReviewText);
-  
-      // Delete a review
-      const reviewIdToDelete = '12345'; // Specify the ID of the review to delete
-      await deleteReview(reviewIdToDelete);
-    } catch (error) {
-      console.error('Example usage error:', error);
-    }
-  }
-  
-  // Run the example usage
-  exampleUsage();
+// const registrationForm = document.getElementById('registration-form');
+
+// registrationForm.addEventListener('submit', async (event) => {
+//   event.preventDefault(); // Prevent form submission
+
+//   // Registration form handling code...
+
+//   registrationForm.reset();
+// });
