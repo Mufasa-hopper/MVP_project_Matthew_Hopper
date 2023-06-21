@@ -27,7 +27,8 @@ app.get('/goodDrinks', async (req, res) => {
 });
 
 // Create a new drink review
-app.post('/drinks/:drinkId/reviews', async (req, res) => {
+app.post('/goodDrinks', async (req, res) => {
+  const { id } = req.params;
   const { drinkId, rating, reviewText } = req.body;
 
   try {

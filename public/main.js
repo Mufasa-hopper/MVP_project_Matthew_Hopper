@@ -3,14 +3,14 @@ const reviewForm = document.getElementById('review-form');
 // Add a review
 async function addReview(drinkId, rating, reviewText) {
   try {
-    const response = await fetch(`./drinks/${drinkId}/reviews`, {
+    const response = await fetch('/goodDrinks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ rating, reviewText }),
     });
-
+    console.log(response);
     const reviewData = await response.json();
     console.log('Review Data:', reviewData); //inspect the response data
     if (!response.ok) {
