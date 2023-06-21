@@ -49,6 +49,28 @@ async function handleReviewFormSubmission(event) {
   }
 }
 
+async function updateReview(reviewId, updatedRating, updatedReviewText) {
+  try {
+    const response = await fetch(`${url}/reviews/${reviewId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ rating: updatedRating, reviewText: updatedReviewText }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update review');
+    }
+
+    console.log('Review updated successfully.');
+  } catch (error) {
+    console.error('Error updating review:', error);
+  }
+}
+
+// Up
+
 // Update a review
 async function handleUpdateReview(event) {
   const reviewId = event.target.dataset.reviewId;
