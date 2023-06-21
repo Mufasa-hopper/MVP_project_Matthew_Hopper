@@ -1,11 +1,12 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const { Pool } = require('pg');
+const cors = require('cors'); 
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT ;
 const dbString = process.env.DATABASE_URL;
 
 const pool = new Pool({
@@ -15,6 +16,8 @@ const pool = new Pool({
 app.use(express.json());
 app.use(express.static('public'));
 
+// Use the cors middleware
+app.use(cors());
 // Retrieve a list of available drinks
 app.get('/goodDrinks', async (req, res) => {
   try {
@@ -27,9 +30,10 @@ app.get('/goodDrinks', async (req, res) => {
 });
 
 // Create a new drink review
-app.post('/goodDrinks', async (req, res) => {
-  const { id } = req.params;
-  const { drinkId, rating, reviewText } = req.body;
+// Create a new drink review
+app.post('/drinks/:drinkId/reviews', async (req, res) => {
+  const { drinkId } = req.params;
+  const { rating, reviewText } = req.body;
 
   try {
     // Check if the drink exists in the database
@@ -47,10 +51,11 @@ app.post('/goodDrinks', async (req, res) => {
 
     res.status(201).send('Review added successfully');
   } catch (err) {
-    console.error('Error executing query:', err);
+    console.error(err);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 // Read a specific drink review
 app.get('/reviews/:reviewId', async (req, res) => {

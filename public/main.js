@@ -1,9 +1,9 @@
 const reviewForm = document.getElementById('review-form');
-
+const url = 'https://test-for-mvp.onrender.com';
 // Add a review
 async function addReview(drinkId, rating, reviewText) {
   try {
-    const response = await fetch('/goodDrinks', {
+    const response = await fetch(`${url}/drinks/${drinkId}/reviews`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
