@@ -1,8 +1,32 @@
-// Add a review to the webpage
-function addReviewToPage(reviewId, rating, reviewText) {
-  const reviewList = document.getElementById('reviews');
-  const reviewHTML = `<li>Review ID: ${reviewId}, Rating: ${rating}, Text: ${reviewText}</li>`;
-  reviewList.innerHTML += reviewHTML;
+const reviewForm = document.getElementById('review-form');
+
+// Add a review
+async function addReview(drinkId, rating, reviewText) {
+  try {
+    const response = await fetch(`/drinks/${drinkId}/reviews`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ rating, reviewText }),
+    });
+
+    const reviewData = await response.json();
+    console.log('Review Data:', reviewData); //inspect the response data
+    if (!response.ok) {
+      throw new Error(reviewData.error);
+    }
+    const reviewId = reviewData.reviewId;
+
+    const reviewList = document.getElementById('reviews');
+    const reviewHTML = `<li>Review ID: ${reviewId}, Rating: ${rating}, Text: ${reviewText}</li>`;
+    reviewList.innerHTML += reviewHTML;
+
+    console.log('Review added successfully. Review ID:', reviewId);
+    reviewForm.reset(); // Reset the form inputs
+  } catch (err) {
+    console.error('Error adding review:', err);
+  }
 }
 
 // Handle the form submission for adding a review
@@ -20,13 +44,6 @@ async function handleReviewFormSubmission(event) {
   try {
     // Add the review to the database
     await addReview(drinkId, rating, reviewText);
-    console.log('Review added successfully.');
-
-    // Add the review to the webpage
-    addReviewToPage(drinkId, rating, reviewText);
-
-    // Reset the form inputs
-    reviewForm.reset();
   } catch (error) {
     console.error('Error adding review:', error);
   }

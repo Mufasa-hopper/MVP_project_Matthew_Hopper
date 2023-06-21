@@ -5,7 +5,7 @@ const { Pool } = require('pg');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 const dbString = process.env.DATABASE_URL;
 
 const pool = new Pool({
@@ -27,7 +27,7 @@ app.get('/drinks', async (req, res) => {
 });
 
 // Create a new drink review
-app.post('/reviews', async (req, res) => {
+app.post('/drinks/:drinkId/reviews', async (req, res) => {
   const { drinkId, rating, reviewText } = req.body;
 
   try {
